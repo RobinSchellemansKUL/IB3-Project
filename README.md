@@ -35,8 +35,24 @@ Pros
 Cons
 - geen sd-card
 ### reden om te kiezen
-Wij kiezen voor de Raspberry pi pico 2 omdat deze een 12-bit 500ksps ADC heeft, dit is meer dan genoeg voor onze toepassing. De Raspberry pi heeft ook genoeg pinnen om all onze drukknoppen en leds aan te sturen. De Pi heeft ook pinnen voor het aansluiten van onze potentiometers. 
-
+De Raspberry pi pico 2 heeft 12-bit 500ksps ADC poorten waarmee we potentiometers kunnen inlezen en eventueel een microfoon. De Raspberry pi heeft ook genoeg pinnen om all onze drukknoppen en leds aan te sturen. 
+### Raspberry pi zero
+specificaties
+- 1GHz single-core CPU
+- 512MB RAM
+- Mini HDMI port
+- Micro USB OTG port
+- Micro USB power
+- Micro sd card reader
+- 26x multi-function GPIO pins 
+- UART communicatie
+Pros
+- ingebouwde sd-card reader
+Cons
+- geen ADC poorten
+- beetje duurder
+### reden om te kiezen
+De Raspberry pi zero heeft een ingebouwde sd-card reader wat het gemakelijk maakt om audio files rechstreeks op de Pi op te slagen.
 ## Audio
 ### DFPlayer Mini MP3 Player
 [Documentatie](https://wiki.dfrobot.com/DFPlayer_Mini_SKU_DFR0299)
@@ -53,7 +69,19 @@ Pros
 Cons
 - te simpel?
 ### Reden om te kopen
-Word aangestuurd met UART (de pico kan dit). Kan aangestuurd worden met DC3.2V~5.0V, de pico heeft een 3.3V output pin. Kan een simpele speaker aansturen. Heeft zelf geheugen.
+Word aangestuurd met UART. Kan aangestuurd worden met DC3.2V~5.0V, de pico heeft een 3.3V output pin. Kan een simpele speaker aansturen. Heeft zelf geheugen.
+### Audio met PWM
+Zelf een speaker kopelen aan een digitale pin, met weerstanden en condensatoren (hoe weet ik nog niet).
+Pros
+- leerrijk
+- uitdagender
+- goedkoop
+Cons
+- nog geheugen nodig
+### Reden om te kiezen
+Als we voor de zero gaan is dit een betere optie omdat we dan al een ingebouwde sd-card reader hebben. In het geval van de pico hebben we nog een externe module nodig om sd-card in te lezen.
+ 
+
 
 ## Microfoon
 ### Electret Microphone Amplifier - MAX4466 with Adjustable Gain
