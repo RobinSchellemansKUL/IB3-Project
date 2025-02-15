@@ -46,6 +46,7 @@ specificaties
 - Micro sd card reader
 - 26x multi-function GPIO pins 
 - UART communicatie
+- SPI communicatie
 Pros
 - ingebouwde sd-card reader
 Cons
@@ -85,8 +86,23 @@ Als we voor de zero gaan is dit een betere optie omdat we dan al een ingebouwde 
 
 ## Microfoon
 ### Electret Microphone Amplifier - MAX4466 with Adjustable Gain
-[documentatie](https://www.adafruit.com/product/1063)
+[Documentatie](https://www.adafruit.com/product/1063)
 ### Reden om te kiezen
 - adjustable gain
 - 2.4V VCC
 - Ingebouwde preamp
+
+## I/O
+### ADC MCP3008
+[Documentatie](https://www.microchip.com/en-us/product/mcp3008)
+- 10-bit resolution
+- 4 input channels
+- SPI serial interface
+- 200ksps at Vdd = 5v
+- 75ksps at Vdd = 2.7
+### buttons
+20 Cherry mx switches
+### potentiometers
+2 100ohm potentiometers?
+
+
