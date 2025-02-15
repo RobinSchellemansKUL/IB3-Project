@@ -106,3 +106,5 @@ Als we voor de zero gaan is dit een betere optie omdat we dan al een ingebouwde 
 2 100ohm potentiometers?
 
 
+
+![image info](./media/blokschema-componenten.png)
