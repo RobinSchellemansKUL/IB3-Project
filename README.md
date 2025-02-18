@@ -122,5 +122,3 @@ De codec is een ideale middenweg tussen de DFPlayer en het implementeren van aud
 2 rotary encoders een voor het volume te wijzigen en voor het tempo (snelheid) te wijzigen. De rotary encoder werkt digitaal dit zorgt ervoor dat er geen ADC conversie nodig is zoals bij bevoorbeeld potentiometers. 
 
 
-
-![image info](./media/blokschema-componenten.png)
