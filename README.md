@@ -62,6 +62,7 @@ Nadelen
 ### Waarom kiezen voor Raspberry pi zero ? 
 De Raspberry pi zero heeft een ingebouwde sd-cardreader wat het gemakelijk maakt om audio files rechtstreeks op de Pi op te slaan.
 ## Audio
+  
 ### DFPlayer Mini MP3 Player
 [Documentatie](https://wiki.dfrobot.com/DFPlayer_Mini_SKU_DFR0299)
 - Sampling rates (kHz): 8/11.025/12/16/22.05/24/32/44.1/48
@@ -78,6 +79,7 @@ Nadelen
 - te simplistisch
 ### Waarom kopen ? 
 Wordt aangestuurd met UART. Kan aangestuurd worden met DC3.2V~5.0V, de pico heeft een 3.3V output pin. Kan een simpele speaker aansturen. Heeft zelf geheugen.
+
 ### Audio met PWM
 Zelf een speaker kopelen aan een digitale pin, met weerstanden en condensatoren (hoe weet ik nog niet).
 Voordelen
@@ -88,8 +90,16 @@ Nadelen
 - nog geheugen nodig
 ### Waarom kiezen voor DFPlayer Mini MP3 player ? 
 Als we voor de zero gaan is dit een betere optie omdat we dan al een ingebouwde sd-card reader hebben. In het geval van de pico hebben we nog een externe module nodig om sd-card in te lezen.
- 
 
+### Raspberry Pi Codec Zero
+[Documentatie](https://www.raspberrypi.com/documentation/accessories/audio.html)
+- 24 - bit audio
+- ondersteund 8-96kHz
+- ingebouwde microfoon, ook een externe microfoon is een mogelijkheid (via mic jack)
+- I2S protocol
+
+### Waarom kiezen voor raspberry pi codec zero?
+De codec is een ideale middenweg tussen de DFPlayer en het implementeren van audio met een PWM signaal. Het beschikt over een ingebouwde microfoon deze moet niet meer aangekocht worden als apart onderdeel. Wanneer deze gecombineerd wordt met de raspberry pi zero is dit een ideale vervanger voor de DFPlayer omdat er geen externe sd-cardreader meer nodig is. 
 
 ## Microfoon
 ### Electret Microphone Amplifier - MAX4466 with Adjustable Gain
@@ -100,17 +110,16 @@ Als we voor de zero gaan is dit een betere optie omdat we dan al een ingebouwde 
 - Ingebouwde preamp
 
 ## I/O
-### ADC MCP3008
-[Documentatie](https://www.microchip.com/en-us/product/mcp3008)
-- 10-bit resolution
-- 4 input channels
-- SPI serial interface
-- 200ksps at Vdd = 5v
-- 75ksps at Vdd = 2.7
+  
 ### buttons
-20 Cherry mx switches
-### potentiometers
-2 100ohm potentiometers?
+[Documentatie keycaps](https://www.amazon.com/Elacgap-Transparent-Material-switches-Mechanical/dp/B0CQ2WZB8S/ref=sr_1_9?crid=YM6DQYJSAKNF&dib=eyJ2IjoiMSJ9.a8UF2Mj67kZUtZrow3BnSLxZQUTPrFePQBuwU3tB_7XzodT58mX1zWMub-_5vLjoxxpBtWtubWXcrqtkW4OMIFENDgWNBe05JpXigrmocyNmBtvOai1FVcBmZUU5ddfN7_nwK6zTQ8z5JTOpf9cCdlhTWrX0dNPJLY1g1lc2HdSiq8jC--ohGpv4cCYV9Pa_g-l2uOAcr4TN34AA-YiHE_V9DBGwnN1c1eSUeegL61M.Ut9my8nrj7t_HhIGRRJVnh_cV6DGgViXSmyjuT4dN1M&dib_tag=se&keywords=transparent%2Bkeycaps&qid=1739887435&sprefix=transparent%2Bkeycaps%2Caps%2C196&sr=8-9&th=1)
+
+[Documentatie switches](https://keygem.com/products/cherry-mx-clear)
+
+20 switches en keycaps die gebruikt worden voor de buttons. 
+
+### Rotary encoder
+2 rotary encoders een voor het volume te wijzigen en voor het tempo (snelheid) te wijzigen. De rotary encoder werkt digitaal dit zorgt ervoor dat er geen ADC conversie nodig is zoals bij bevoorbeeld potentiometers. 
 
 
 
