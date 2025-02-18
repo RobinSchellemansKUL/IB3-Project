@@ -6,4 +6,5 @@
 - PCB               (50.00 euro (schatting prijs afhankelijk van afmeting))
 - Leds              (2.60 euro (afhankelijk van pcb))
 - Weerstanden       (1.00 euro (afhankelijk van pcb))
+  
   geschatte totaalprijs: 121.82
