@@ -1,4 +1,5 @@
 # IB3-Project
+![banner](media/banner.png)
 ## Beschrijving
 Dit project bestaat uit een drummachine die gebruikt wordt om drumsequenties af te spelen. Deze drummachine heeft 16 drukknoppen waarmee verschillende stappen in de sequentie geactiveerd kunnen worden en 16 selecteerbare geluiden die afgespeeld kunnen worden op de sequentie. 
 Extra drukknoppen voor:
