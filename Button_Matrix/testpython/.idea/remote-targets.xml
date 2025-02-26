@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="pi@raspberrypi:22" type="ssh/sftp" uuid="1651f96c-7ee7-414e-929d-8749de2ba6bc">
+        <config>
+          <option name="projectRootOnTarget" value="/home/pi/testpython" />
+          <option name="serverName" value="pi@raspberrypi:22 password" />
+        </config>
+      </target>
+    </targets>
+  </component>
+</project>
