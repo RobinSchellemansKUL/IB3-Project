@@ -40,12 +40,16 @@ GPIO.setup(ROW_2, GPIO.OUT)
 GPIO.setup(COL_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(COL_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+#thread variables
+play_thread = None
+rotary_thread = None
+
+#flags & main program variables
+playing = False
 sounds_list = []
 modes = ["default","add_sound_to_list","play_mode"]
 current_mode_i = 0
-bpm = 250 #random start value
-play_thread = None
-playing = False
+bpm = 120 #random start value
 
 #####################
 #end setup variables#
@@ -64,11 +68,11 @@ def change_mode():
 
     if modes[current_mode_i] == "play_mode":
         playing = True
-        start_thread(play_sounds)
+        start_thread_play_sounds(play_sounds)
     else:
         playing = False
 
-def start_thread(target):
+def start_thread_play_sounds(target):
     global play_thread
     if play_thread is None or not play_thread.is_alive():
         play_thread = threading.Thread(target=target, daemon=True) #daemon sluit thread af wanneer hoofd programma sluit
@@ -139,17 +143,90 @@ def readRow(line):
         time.sleep(0.2)
     GPIO.output(line, GPIO.HIGH)
 
-# Endless loop by checking each row
-try:
+
+
+##############################
+##rotary encoder 1 BPM speed##
+##############################
+
+# Pins setup
+CLK = 11  #
+DT = 10   #
+
+GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+
+#interupt method doesnt work (failed to add edge detection error) already installed rpi-lgpio and ran with sudo
+'''
+def rotary_callback(channel):
+    print("rotary encoder callback works")
+    global bpm
+    clk_state = GPIO.input(CLK)
+    dt_state = GPIO.input(DT)
+
+    if dt_state != clk_state:
+        bpm += 1  # turn clockwise increases BPM
+    else:
+        bpm -= 1  # turn counterclockwise lowers BPM
+
+    bpm = max(30, min(bpm, 400))  # limit BPM between 30 and between(current_bmp and 300)
+    print(f"BPM: {bpm}")
+'''
+
+##add and interrupt listener before the endless loop for the rotary encoder
+#GPIO.add_event_detect(CLK, GPIO.FALLING, callback=rotary_callback, bouncetime=50)
+
+########################################################
+#Rotary encoder with polling method (use another thread)
+########################################################
+
+def polling_method_rotary_encoder():
+    global bpm
+    prev_clk_state = GPIO.input(CLK)
+
     while True:
-        readRow(ROW_1) #gpio7
-        readRow(ROW_2) #gpio8
-        #time.sleep(0.2) putting sleep time on every button individually causes less delay
-except KeyboardInterrupt:
-    print("\nProgramma gestopt")
-    GPIO.cleanup() #set pins back to input pins
-###############################
-##end reading buttons##
-###############################
+        clk_state = GPIO.input(CLK)
+        dt_state = GPIO.input(DT)
+
+        if clk_state != prev_clk_state:  # detect change
+            if dt_state != clk_state:
+                bpm += 1  # Turn clockwise increases BPM
+            else:
+                bpm -= 1  # turn counterclockwise lower BPM
+
+            bpm = max(30, min(bpm, 300))  # Limiteer BPM tussen 30 en 300
+            print(f"BPM: {bpm}")
+
+        prev_clk_state = clk_state  # keep track of current clk state
+        time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
+
+def start_thread_rotary():
+    global rotary_thread
+    if rotary_thread is None or not rotary_thread.is_alive():
+        rotary_thread = threading.Thread(target=polling_method_rotary_encoder, daemon=True) #daemon close thread when main program closes
+        rotary_thread.start()
+
+####################################
+#endless loop to check button matrix#
+####################################
+
+# Endless loop for checking rows
+def main():
+    start_thread_rotary()
+    try:
+        while True:
+            readRow(ROW_1) #gpio7
+            readRow(ROW_2) #gpio8
+            #time.sleep(0.2) putting sleep time on every button individually causes less delay
+    except KeyboardInterrupt:
+        print("\nProgramma gestopt")
+        GPIO.cleanup() #set pins back to input pins
+
+main()
+
+
+
+
 
 
