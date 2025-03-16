@@ -16,7 +16,7 @@ try:
         clk_state = GPIO.input(CLK)
         dt_state = GPIO.input(DT)
         print(f"CLK: {clk_state}, DT: {dt_state}")
-        time.sleep(0.1)  # kleine vertraging om te voorkomen dat de console te snel volloopt
+        time.sleep(0.1)  
 except KeyboardInterrupt:
     GPIO.cleanup()
 """
@@ -29,7 +29,7 @@ while True:
     dt_state = GPIO.input(DT)
 
     if clk_state != last_clk_state:  # Detect change
-        if dt_state != clk_state: #if DT pin is not equal to clk
+        if dt_state != clk_state:
             bpm += 1
         else:
             bpm -= 1
@@ -38,4 +38,4 @@ while True:
         print(f"CLK: {clk_state}, DT: {dt_state}")  # Debugging
         print(f"BPM: {bpm}")
     last_clk_state = clk_state
-    time.sleep(0.01)  # 10ms delay om CPU-belasting te beperken
+    time.sleep(0.01)  # 10ms
