@@ -4,9 +4,9 @@ import pygame
 import threading
 
 # Initating mixer
-pygame.mixer.init(buffer=8192) #increase buffer to avoid underrun errors
+pygame.mixer.init(buffer=8192) # Increase buffer to avoid underrun errors
 
-#loading sounds
+# Loading sounds
 kick = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")
 snare = pygame.mixer.Sound("/home/pi/sounds/snare1.wav")
 clap = pygame.mixer.Sound("/home/pi/sounds/clap1.wav")
@@ -40,11 +40,11 @@ GPIO.setup(ROW_2, GPIO.OUT)
 GPIO.setup(COL_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(COL_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-#thread variables
+# Thread variables
 play_thread = None
 rotary_thread = None
 
-#flags & main program variables
+# Flags & main program variables
 playing = False
 sounds_list = []
 modes = ["default","add_sound_to_list","play_mode"]
@@ -55,7 +55,7 @@ bpm = 120 #random start value
 #end setup variables#
 #####################
 
-#after setup show current mode in terminal.
+# After setup show current mode in terminal.
 print(f"we are in {modes[current_mode_i]}")
 
 #################################
@@ -80,7 +80,7 @@ def start_thread_play_sounds(target):
 
 def play_sounds():
     """function that plays sound according to BPM speed."""
-    print("sounds will be played")
+    print("Sounds will be played")
     global playing
     while playing:
         if sounds_list:  # only play when there are sounds in the list
@@ -102,43 +102,43 @@ def readRow(line):
             case "default": #default behavior just plays a sound
                 #Button columnm 1 and row 1 is pressed
                 kick.play()
-                print(f"rij 1 kolom 1 is ingedrukt gpio {line}")
+                print(f"Rij 1 kolom 1 is ingedrukt gpio {line}")
                 time.sleep(0.2)
             case "add_sound_to_list":
-                print(f"we are in{modes[current_mode_i]}")
+                print(f"We are in{modes[current_mode_i]}")
                 kick.play()
                 sounds_list.append(kick)
-                print("kick sound successfully added to list")
+                print("Kick sound successfully added to list")
                 time.sleep(0.2)
 
     if GPIO.input(COL_1) == GPIO.LOW and line == ROW_2:
         match modes[current_mode_i]:
             case "default":
                 clap.play()
-                print(f"rij 2 kolom 1 is ingedrukt gpio {line}")
+                print(f"Rij 2 kolom 1 is ingedrukt gpio {line}")
                 time.sleep(0.2)
             case "add_sound_to_list":
-                print(f"we are in{modes[current_mode_i]}")
+                print(f"We are in{modes[current_mode_i]}")
                 clap.play()
                 sounds_list.append(clap)
-                print("clap sound successfully added to list")
+                print("Clap sound successfully added to list")
                 time.sleep(0.2)
 
     if GPIO.input(COL_2) == GPIO.LOW and line == ROW_1:
         match modes[current_mode_i]:
             case "default":
                 ride.play()
-                print(f"rij 1 kolom 2 is ingedrukt gpio {line}")
+                print(f"Rij 1 kolom 2 is ingedrukt gpio {line}")
                 time.sleep(0.2)
             case "add_sound_to_list":
-                print(f"we are in{modes[current_mode_i]}")
+                print(f"We are in{modes[current_mode_i]}")
                 ride.play()
                 sounds_list.append(ride)
-                print("clap sound successfully added to list")
+                print("Clap sound successfully added to list")
                 time.sleep(0.2)
 
     if GPIO.input(COL_2) == GPIO.LOW and line == ROW_2:
-        print(f"rij 2 kolom 2 is ingedrukt gpio {line}")
+        print(f"Rij 2 kolom 2 is ingedrukt gpio {line}")
         change_mode()
         time.sleep(0.2)
     GPIO.output(line, GPIO.HIGH)
@@ -191,9 +191,9 @@ def polling_method_rotary_encoder():
 
         if clk_state != prev_clk_state:  # detect change
             if dt_state != clk_state:
-                bpm += 1  # Turn clockwise increases BPM
+                bpm += 5  # Turn clockwise increases BPM
             else:
-                bpm -= 1  # turn counterclockwise lower BPM
+                bpm -= 5  # turn counterclockwise lower BPM
 
             bpm = max(30, min(bpm, 300))  # Limiteer BPM tussen 30 en 300
             print(f"BPM: {bpm}")
