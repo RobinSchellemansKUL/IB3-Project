@@ -3,6 +3,9 @@ import time
 import pygame
 import threading
 
+from Button_Matrix.full_pcb_test.main import last_played_sound, layer_active
+
+
 ######################
 # Rotary decoder BPM #
 ######################
@@ -118,6 +121,7 @@ def readRow(column):
 
     if GPIO.input(row_5) == GPIO.HIGH and column == 5:
         print("Switch 17")
+        # TODO: start sequencer van hier uit
         # play => start sequencer
 
     if GPIO.input(row_5) == GPIO.HIGH and column == 6:
@@ -144,6 +148,8 @@ def button_action(switch):
     global modes
     global layers
     global sounds
+    global sequence_1, sequence_2, sequence_3, sequence_4
+    global last_selected_sound
     match modes:
         case "write":
             match layers:
@@ -158,5 +164,10 @@ def button_action(switch):
         case "layer":
             if switch > 0 and switch <= 4:
                 layers = switch
+                if layer_active[switch] == 1:
+                    layer_active[switch] = 0
+                else:
+                    layer_active[switch] = 1
         case _:
             sounds[switch].play()
+            last_selected_sound = switch
