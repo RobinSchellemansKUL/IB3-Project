@@ -3,8 +3,9 @@ import time
 import pygame
 import threading
 
+import main
 import input_output
-
+import sequencer
 
 def thread_volume():
     global thread_volume
@@ -13,10 +14,9 @@ def thread_volume():
         rotary_thread.start()
 
 def thread_bpm():
-    global thread_bpm
-    if thread_bpm is None or not thread_bpm.is_alive():
-        rotary_thread = threading.Thread(target=input_output.polling_bpm, daemon=True)
-        rotary_thread.start()
+    if main.thread_bpm is None or not main.thread_bpm.is_alive():
+        main.thread_bpm = threading.Thread(target=input_output.polling_bpm, daemon=True)
+        main.thread_bpm.start()
 
 def thread_button_matrix():
     global thread_button_matrix
@@ -25,7 +25,6 @@ def thread_button_matrix():
         rotary_thread.start()
 
 def thread_sequencer():
-    global thread_sequencer
-    if thread_sequencer is None or not thread_sequencer.is_alive():
-        thread_sequencer = threading.Thread(target=play_sequence, daemon=True)
+    if main.thread_sequencer is None or not main.thread_sequencer.is_alive():
+        main.thread_sequencer = threading.Thread(target=sequencer.play_sequencer, daemon=True)
         thread_sequencer.start()
