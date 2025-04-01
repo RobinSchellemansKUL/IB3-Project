@@ -11,7 +11,6 @@ from Button_Matrix.full_pcb_test.main import last_played_sound, layer_active
 ######################
 
 def polling_bpm():
-    global bpm
     CLK = 11
     DT = 10
 
@@ -27,8 +26,8 @@ def polling_bpm():
             else:
                 bpm -= 5  # turn counterclockwise lower BPM
 
-            bpm = max(30, min(bpm, 300))  # Limiteer BPM tussen 30 en 300
-            print(f"BPM: {bpm}")
+            main.bpm = max(30, min(main.bpm, 300))  # Limiteer BPM tussen 30 en 300
+            print(f"BPM: {main.bpm}")
 
         prev_clk_state = clk_state  # keep track of current clk state
         time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
@@ -127,10 +126,10 @@ def readRow(column):
     if GPIO.input(row_5) == GPIO.HIGH and column == 6:
         print("Switch 18")
         # write
-        if modes == "write":
-            modes = "default"
+        if main.modes == "write":
+            main.modes = "default"
         else:
-            modes = "write"
+            main.modes = "write"
 
     if GPIO.input(row_5) == GPIO.HIGH and column == 17:
         print("Switch 19")
@@ -154,20 +153,20 @@ def button_action(switch):
         case "write":
             match layers:
                 case 1:
-                    sequence_1[i] = last_selected_sound
+                    sequence_1[switch] = main.last_selected_sound
                 case 2:
-                    sequence_2[i] = last_selected_sound
+                    sequence_2[switch] = main.last_selected_sound
                 case 3:
-                    sequence_3[i] = last_selected_sound
+                    sequence_3[switch] = main.last_selected_sound
                 case 4:
-                    sequence_4[i] = last_selected_sound
+                    sequence_4[switch] = main.last_selected_sound
         case "layer":
-            if switch > 0 and switch <= 4:
-                layers = switch
+            if 0 < switch <= 4:
+                main.layers = switch
                 if layer_active[switch] == 1:
                     layer_active[switch] = 0
                 else:
                     layer_active[switch] = 1
         case _:
             sounds[switch].play()
-            last_selected_sound = switch
+            main.last_selected_sound = switch

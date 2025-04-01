@@ -23,3 +23,9 @@ def thread_button_matrix():
     if thread_button_matrix is None or not thread_button_matrix.is_alive():
         rotary_thread = threading.Thread(target=input_output.polling_matrix, daemon=True)
         rotary_thread.start()
+
+def thread_sequencer():
+    global thread_sequencer
+    if thread_sequencer is None or not thread_sequencer.is_alive():
+        thread_sequencer = threading.Thread(target=play_sequence, daemon=True)
+        thread_sequencer.start()
