@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import pygame
 
 import threads
+import input_output
+import sequencer
 
 def initiate():
     # Initating mixer
@@ -28,17 +30,17 @@ def initiate():
     GPIO.setmode(GPIO.BCM)
 
     # Set Row pins as output
-    GPIO.setup(7, GPIO.OUT)
-    GPIO.setup(8, GPIO.OUT)
-    GPIO.setup(12, GPIO.OUT)
-    GPIO.setup(15, GPIO.OUT)
-    GPIO.setup(16, GPIO.OUT)
+    GPIO.setup(7, GPIO.IN)
+    GPIO.setup(8, GPIO.IN)
+    GPIO.setup(12, GPIO.IN)
+    GPIO.setup(15, GPIO.IN)
+    GPIO.setup(16, GPIO.IN)
 
     # Set column pins as input and Pulled up high by default
-    GPIO.setup(5, GPIO.IN)
-    GPIO.setup(6, GPIO.IN)
-    GPIO.setup(17, GPIO.IN)
-    GPIO.setup(13, GPIO.IN)
+    GPIO.setup(5, GPIO.OUT)
+    GPIO.setup(6, GPIO.OUT)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(13, GPIO.OUT)
 
     # Set CLK and DT for bpm
     GPIO.setup(11, GPIO.IN)
@@ -59,3 +61,10 @@ def initiate():
 
     print("Setup done")
     return sounds
+
+def main():
+    sounds = initiate()
+    input_output.write_sounds(sounds)
+    sequencer.write_sounds(sounds)
+
+main()
