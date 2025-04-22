@@ -4,8 +4,8 @@ import pygame
 import threading
 
 
-from main import modes, layers, layer_active, sequence_1, sequence_2, sequence_3, sequence_4
-import main
+from variables import modes, layers, layer_active, sequence_1, sequence_2, sequence_3, sequence_4
+import variables
 
 sounds = []
 def write_sounds(loaded_sounds):
