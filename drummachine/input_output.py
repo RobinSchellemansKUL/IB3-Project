@@ -128,6 +128,8 @@ class Input_Output:
                 self._drummachine.playing = 1
             else:
                 self._drummachine.playing = 0
+            print("debug")
+            print(self._drummachine.playing)
             self._sequencer.start_thread_sequencer()
             time.sleep(waiting)
 

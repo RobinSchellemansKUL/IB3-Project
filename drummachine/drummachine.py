@@ -15,7 +15,7 @@ class DrumMachine:
 
     def __init__(self):
         # Initating mixer
-        pygame.mixer.init(buffer=8192) # Increase buffer to avoid underrun errors
+        pygame.mixer.init(buffer=1024) # Increase buffer to avoid underrun errors
 
         # Loading sounds
         kick = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")

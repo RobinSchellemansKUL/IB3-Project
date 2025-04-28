@@ -26,7 +26,7 @@ class Sequencer:
 
         self._bpm = 120
 
-        self._sequence_1 = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1                         ],0,0,0]
+        self._sequence_1 = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
         # self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_3 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -34,38 +34,25 @@ class Sequencer:
         self._layers_active = [self._sequence_1,0,0,0]
 
     def start_thread_sequencer(self):
+        print("degub")
         if self.thread_sequencer is None or not self.thread_sequencer.is_alive():
             self.thread_sequencer = threading.Thread(target=self.play_sequencer, daemon=True)
             self.thread_sequencer.start()
 
     def play_sequencer(self):
-        """function that plays sound according to BPM speed."""
-        print("Sounds will be played")
+        timestamp = time.time()
+        i = 0
+
         while self._drummachine.playing:
-            for i in range(0,15):
+            timestampcheck = time.time()
+            if timestampcheck - timestamp > 0.1:
+                timestamp = time.time()
                 for j in range(0,3):
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
                             self._layers_active[j][i].play()
-                time.sleep(30 / self._bpm)
-                print("tel has passed")
-
-        # print("Sounds will be played")
-        # while self._drummachine.playing:
-        #     for i in range(0,15):
-        #         if self._drummachine.layers_active[0] != 0:
-        #             if self._drummachine.sequence_1[i] != 0:
-        #                 self._drummachine.sounds[sequence_1[i]].play()
-        #         if self._drummachine.layers_active[1] != 0:
-        #             if self._drummachine.sequence_2[i] != 0:
-        #                 self._drummachine.sequence_2[i].play()
-        #         if self._drummachine.layers_active[2] != 0:
-        #             if self._drummachine.sequence_3[i] != 0:
-        #                 self._drummachine.sequence_3[i].play()
-        #         if self._drummachine.layers_active[3] != 0:
-        #             if self._drummachine.sequence_4[i] != 0:
-        #                 self._drummachine.sequence_4[i].play()
-        #         time.sleep(60/self._drummachine.bpm)
+                i += 1
+                i = i%16
 
     # Getters and Setters
     @property
