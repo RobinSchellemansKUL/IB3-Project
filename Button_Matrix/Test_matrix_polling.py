@@ -16,7 +16,7 @@ hihat = pygame.mixer.Sound("/home/pi/sounds/hihat1.wav")
 
 # Startup sound
 jazz.play()
-
+stop_threads = False
 #################
 #setup variables#
 #################
@@ -182,14 +182,16 @@ def rotary_callback(channel):
 ########################################################
 
 def polling_method_rotary_encoder():
+    print("BPM debug")
     global bpm
     prev_clk_state = GPIO.input(CLK)
 
-    while True:
+    while not stop_threads:
         clk_state = GPIO.input(CLK)
         dt_state = GPIO.input(DT)
-
+        #print("BPM debug after setup")
         if clk_state != prev_clk_state:  # detect change
+            print("BPM debug change detected")
             if dt_state != clk_state:
                 bpm += 5  # Turn clockwise increases BPM
             else:
@@ -200,6 +202,7 @@ def polling_method_rotary_encoder():
 
         prev_clk_state = clk_state  # keep track of current clk state
         time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
+    GPIO.cleanup()
 
 def start_thread_rotary():
     global rotary_thread
@@ -214,13 +217,16 @@ def start_thread_rotary():
 # Endless loop for checking rows
 def main():
     start_thread_rotary()
+    global stop_threads
     try:
         while True:
             readRow(ROW_1) #gpio7
             readRow(ROW_2) #gpio8
             #time.sleep(0.2) putting sleep time on every button individually causes less delay
     except KeyboardInterrupt:
+        stop_threads = True
         print("\nProgramma gestopt")
+        time.sleep(0.1)
         GPIO.cleanup() #set pins back to input pins
 
 main()
