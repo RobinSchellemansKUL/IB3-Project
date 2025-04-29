@@ -18,6 +18,8 @@ class Input_Output:
     thread_bpm = None
     thread_button_matrix = None
 
+    _thread_bpm_stopper = False
+
     def __new__(cls, drummachine, sequencer):
         if not cls._instance:
             cls._instance = super().__new__(cls)
@@ -197,6 +199,11 @@ class Input_Output:
             self.thread_bpm = threading.Thread(target=self.polling_bpm, daemon=True) #daemon close thread when self program closes
             self.thread_bpm.start()
 
+    def stop_thread_bpm(self):
+        print("Killing threads")
+        self._thread_bpm_stopper = True
+
+
     def polling_bpm(self):
         print("BPM debug")
         CLK = 11
@@ -209,7 +216,7 @@ class Input_Output:
 
         prev_clk_state = GPIO.input(CLK)
         print("BPM debug after setup")
-        while True:
+        while not self._thread_bpm_stopper:
             clk_state = GPIO.input(CLK)
             dt_state = GPIO.input(DT)
 
@@ -266,3 +273,12 @@ class Input_Output:
     @mode.setter
     def mode(self, value):
         self._mode = value
+
+    @property
+    def thread_bpm_stopper(self):
+        return self._thread_bpm_stopper
+
+    @thread_bpm_stopper.setter
+    def thread_bpm_stopper(self, value):
+        self._thread_bpm_stopper = value
+

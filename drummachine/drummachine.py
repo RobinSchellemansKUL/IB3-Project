@@ -80,6 +80,8 @@ class DrumMachine:
                 self._input_output.readRow(17)
                 self._input_output.readRow(13)
         except KeyboardInterrupt:
+            #stop threads
+            self._input_output.stop_thread_bpm()
             print("\n program closed.")
             GPIO.cleanup()
 
