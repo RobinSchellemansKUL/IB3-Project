@@ -17,7 +17,7 @@ class DrumMachine:
 
     def __init__(self):
         # Initating mixer
-        pygame.mixer.pre_init(frequency=32000, buffer=1024) # Increase buffer to avoid underrun errors 2**10= 1024 or frequency to 44100 for better quality 32000 or even 22050
+        pygame.mixer.pre_init(frequency=32000, buffer=896) # Increase buffer to avoid underrun errors 2**10= 1024, 1536, 896 or 512 or frequency to 44100 for better quality 32000 or even 22050
         pygame.mixer.init()
         # Loading sounds
         kick1 = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")
