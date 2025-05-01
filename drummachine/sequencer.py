@@ -47,16 +47,24 @@ class Sequencer:
         while self._drummachine.playing:
             step_interval = 60 / self._bpm / 4 #read bpm again check for changes
             timestampcheck = time.time()
-
             if timestampcheck >= current_timestamp:
                 for j in range(0,3):
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
-                            print(self._layers_active)
-                            self._layers_active[j][i].play()
+                            sound = self._layers_active[j][i]
+                            try:
+                                sound_index = self._drummachine.sounds.index(sound)
+                                channel_list = self._drummachine.channel_groups[sound_index] #gives back the correct channel group
+                                channel = channel_list[self._drummachine.next_channel_index[sound_index]] #gives back the available channel (0-3)
+                                channel.play(sound)
+
+                                self._drummachine.next_channel_index[sound_index] = (self._drummachine.next_channel_index[sound_index]+1) % len(channel_list) #set available channel + 1
+                            except ValueError:
+                                print("Sound not found in sound list")
                 i += 1
                 i = i%16
                 current_timestamp += step_interval
+                time.sleep(0.001) #avoid 100% cpu load
 
     # Getters and Setters
     @property

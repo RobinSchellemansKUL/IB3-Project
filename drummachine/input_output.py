@@ -206,7 +206,6 @@ class Input_Output:
 
 
     def start_thread_bpm(self):
-        print("Debug bpm")
         if self.thread_bpm is None or not self.thread_bpm.is_alive():
             self.thread_bpm = threading.Thread(target=self.polling_bpm, daemon=True) #daemon close thread when self program closes
             self.thread_bpm.start()
@@ -217,23 +216,16 @@ class Input_Output:
 
 
     def polling_bpm(self):
-        print("BPM debug")
         CLK = 26 #26 11
         DT = 9  #9 10
 
-        #GPIO.setwarnings(False)
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        #GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
         prev_clk_state = GPIO.input(CLK)
-        print("BPM debug after setup")
+
         while not self._thread_bpm_stopper:
             clk_state = GPIO.input(CLK)
             dt_state = GPIO.input(DT)
 
             if clk_state != prev_clk_state:  # detect change
-                print("BPM debug change detected")
                 if dt_state != clk_state:
                     self._sequencer.bpm -= 5  # Turn counterclockwise increases BPM
                 else:
