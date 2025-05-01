@@ -18,7 +18,7 @@ class Input_Output:
     thread_bpm = None
     thread_button_matrix = None
 
-    _thread_bpm_stopper = False
+    _thread_polling_stopper = False
 
     def __new__(cls, drummachine, sequencer):
         if not cls._instance:
@@ -33,6 +33,7 @@ class Input_Output:
         self._mode = "default"
 
         self.start_thread_bpm()
+        self.start_thread_volume()
 
     def readRow(self, row):
         waiting = 0.2
@@ -201,6 +202,7 @@ class Input_Output:
                         self._sequencer.layers_active[switch-1] = 0
                         print(f"layer{switch} deactivated")
             case _:
+                self._drummachine.sounds[switch-1].set_volume(self._sequencer.volume)
                 self._drummachine.sounds[switch-1].play()
                 self._last_selected_sound = self._drummachine.sounds[switch-1] # hier stond gwn switch ???  9999
 
@@ -210,29 +212,56 @@ class Input_Output:
             self.thread_bpm = threading.Thread(target=self.polling_bpm, daemon=True) #daemon close thread when self program closes
             self.thread_bpm.start()
 
-    def stop_thread_bpm(self):
+    def start_thread_volume(self):
+        if self.thread_volume is None or not self.thread_volume.is_alive():
+            self.thread_volume = threading.Thread(target=self.polling_volume, daemon=True) #daemon close thread when self program closes
+            self.thread_volume.start()
+
+    def stop_thread_polling(self):
         print("Killing threads")
-        self._thread_bpm_stopper = True
+        self._thread_polling_stopper = True
 
 
     def polling_bpm(self):
-        CLK = 26 #26 11
-        DT = 9  #9 10
+        CLK = 11 #26 11
+        DT = 10  #9 10
 
         prev_clk_state = GPIO.input(CLK)
 
-        while not self._thread_bpm_stopper:
+        while not self._thread_polling_stopper:
             clk_state = GPIO.input(CLK)
             dt_state = GPIO.input(DT)
 
             if clk_state != prev_clk_state:  # detect change
                 if dt_state != clk_state:
-                    self._sequencer.bpm -= 5  # Turn counterclockwise increases BPM
+                    self._sequencer.bpm -= 5  # Turn counterclockwise decreases BPM
                 else:
-                    self._sequencer.bpm += 5  # turn clockwise lower BPM
+                    self._sequencer.bpm += 5  # turn clockwise increase BPM
 
                 self._sequencer.bpm = max(30, min(self._sequencer.bpm, 300))  # Limiteer BPM tussen 30 en 300
                 print(f"BPM: {self._sequencer.bpm}")
+
+            prev_clk_state = clk_state  # keep track of current clk state
+            time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
+
+    def polling_volume(self):
+        CLK = 26 #26 11
+        DT = 9  #9 10
+
+        prev_clk_state = GPIO.input(CLK)
+
+        while not self._thread_polling_stopper:
+            clk_state = GPIO.input(CLK)
+            dt_state = GPIO.input(DT)
+
+            if clk_state != prev_clk_state:  # detect change
+                if dt_state != clk_state:
+                    self._sequencer.volume -= 0.05  # Turn counterclockwise decreases volume
+                else:
+                    self._sequencer.volume += 0.05  # turn clockwise increases volume
+
+                self._sequencer.volume = round(max(0, min(self._sequencer.volume, 1)), 2)  # Limiteer BPM tussen 0 en 1
+                print(f"Volume: {self._sequencer.volume}")
 
             prev_clk_state = clk_state  # keep track of current clk state
             time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values

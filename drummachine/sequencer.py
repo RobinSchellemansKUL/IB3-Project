@@ -15,6 +15,7 @@ class Sequencer:
     _layers_active = None
 
     _bpm = None
+    _volume = None
 
     def __new__(cls, drummachine):
         if not cls._instance:
@@ -25,6 +26,7 @@ class Sequencer:
         self._drummachine = drummachine
 
         self._bpm = 120
+        self._volume = 1
 
         self._sequence_default = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
         self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -56,6 +58,7 @@ class Sequencer:
                                 sound_index = self._drummachine.sounds.index(sound)
                                 channel_list = self._drummachine.channel_groups[sound_index] #gives back the correct channel group
                                 channel = channel_list[self._drummachine.next_channel_index[sound_index]] #gives back the available channel (0-3)
+                                channel.set_volume(self._volume)
                                 channel.play(sound)
 
                                 self._drummachine.next_channel_index[sound_index] = (self._drummachine.next_channel_index[sound_index]+1) % len(channel_list) #set available channel + 1
@@ -122,3 +125,11 @@ class Sequencer:
     @bpm.setter
     def bpm(self, value):
         self._bpm = value
+
+    @property
+    def volume(self):
+        return self._volume
+
+    @volume.setter
+    def volume(self, value):
+        self._volume = value
