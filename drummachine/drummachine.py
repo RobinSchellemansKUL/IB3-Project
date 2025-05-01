@@ -7,6 +7,8 @@ class DrumMachine:
 
     _input_output = None
     _playing = None
+    _channel_groups = None
+    _next_channel_index = None
 
     def __new__(cls):
         if not cls._instance:
@@ -15,7 +17,7 @@ class DrumMachine:
 
     def __init__(self):
         # Initating mixer
-        pygame.mixer.init(buffer=1024) # Increase buffer to avoid underrun errors
+        pygame.mixer.init(buffer=2**10) # Increase buffer to avoid underrun errors 2**10= 1024
 
         # Loading sounds
         kick = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")
@@ -27,6 +29,15 @@ class DrumMachine:
         # More sounds...
 
         self._sounds = [kick, snare, clap, ride, jazz, hihat]
+
+        pygame.mixer.set_num_channels(len(self._sounds) * 3)
+
+        # for every sound make a channel group (3 channels per sound)
+        self._channel_groups = [
+            [pygame.mixer.Channel(i * 3 + j) for j in range(3)] for i in range(len(self._sounds)) #channel_groups is an array that contains 3 channels for every sound (i).
+        ]
+
+        self._next_channel_index = [0 for _ in range(len(self._sounds))] #Keep track of the next available channel for each sound.
 
         print("Loaded all sounds")
 

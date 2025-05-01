@@ -26,12 +26,12 @@ class Sequencer:
 
         self._bpm = 120
 
-        self._sequence_1 = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
-        # self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        self._sequence_default = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
+        self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_3 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_4 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        self._layers_active = [self._sequence_1,0,0,0]
+        self._layers_active = [self._sequence_default,0,0,0]
 
     def start_thread_sequencer(self):
         print("degub")
@@ -40,19 +40,23 @@ class Sequencer:
             self.thread_sequencer.start()
 
     def play_sequencer(self):
-        timestamp = time.time()
+        step_interval = 60 / self._bpm / 4   #introduces bpm to play sequencer (60/bpm) amount of seconds per beat /4 per step
+        current_timestamp = time.time()
         i = 0
 
         while self._drummachine.playing:
+            step_interval = 60 / self._bpm / 4 #read bpm again check for changes
             timestampcheck = time.time()
-            if timestampcheck - timestamp > 0.1:
-                timestamp = time.time()
+
+            if timestampcheck >= current_timestamp:
                 for j in range(0,3):
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
+                            print(self._layers_active)
                             self._layers_active[j][i].play()
                 i += 1
                 i = i%16
+                current_timestamp += step_interval
 
     # Getters and Setters
     @property

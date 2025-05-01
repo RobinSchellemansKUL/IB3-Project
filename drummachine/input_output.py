@@ -130,7 +130,6 @@ class Input_Output:
                 self._drummachine.playing = 1
             else:
                 self._drummachine.playing = 0
-            print("debug")
             print(self._drummachine.playing)
             self._sequencer.start_thread_sequencer()
             time.sleep(waiting)
@@ -140,8 +139,10 @@ class Input_Output:
             # write
             if self._mode == "write":
                 self._mode = "default"
+                print("Activated default mode")
             else:
                 self._mode = "write"
+                print("Activated write mode")
             time.sleep(waiting)
 
         elif GPIO.input(row_5) == GPIO.HIGH and row == 17:
@@ -149,8 +150,10 @@ class Input_Output:
             # layer
             if self._mode == "layer":
                 self._mode = "default"
+                print("Activated default mode")
             else:
                 self._mode = "layer"
+                print("Activated layer mode")
             time.sleep(waiting)
 
         elif GPIO.input(row_5) == GPIO.HIGH and row == 13:
@@ -167,30 +170,39 @@ class Input_Output:
                 match self._layer:
                     case 1:
                         self._sequencer.sequence_1[switch] = self._last_selected_sound
+                        print(f"wrote {self._last_selected_sound} in layer 1")
                     case 2:
                         self._sequencer.sequence_2[switch] = self._last_selected_sound
+                        print(f"wrote {self._last_selected_sound} in layer 2")
                     case 3:
                         self._sequencer.sequence_3[switch] = self._last_selected_sound
+                        print(f"wrote {self._last_selected_sound} in layer 3")
                     case 4:
                         self._sequencer.sequence_4[switch] = self._last_selected_sound
+                        print(f"wrote {self._last_selected_sound} in layer 4")
             case "layer":
                 if 0 < switch <= 4:
                     self._layer = switch
-                    if self._drummachine.layers_active[switch] == 0:
+                    if self._sequencer.layers_active[switch-1] == 0:
                         match switch:
                             case 1:
-                                self._sequencer.layers_active[switch] = self._drummachine.sequence_1
+                                self._sequencer.layers_active[switch-1] = self._sequencer.sequence_1
+                                print("layer 1 active")
                             case 2:
-                                self._sequencer.layers_active[switch] = self._drummachine.sequence_2
+                                self._sequencer.layers_active[switch-1] = self._sequencer.sequence_2
+                                print("layer 2 active")
                             case 3:
-                                self._sequencer.layers_active[switch] = self._drummachine.sequence_3
+                                self._sequencer.layers_active[switch-1] = self._sequencer.sequence_3
+                                print("layer 3 active")
                             case 4:
-                                self._sequencer.layers_active[switch] = self._drummachine.sequence_4
+                                self._sequencer.layers_active[switch-1] = self._sequencer.sequence_4
+                                print("layer 4 active")
                     else:
-                        self._sequencer.layers_active[switch] = 0
+                        self._sequencer.layers_active[switch-1] = 0
+                        print(f"layer{switch} deactivated")
             case _:
                 self._drummachine.sounds[switch-1].play()
-                self._last_selected_sound = switch
+                self._last_selected_sound = self._drummachine.sounds[switch-1] # hier stond gwn switch ???  9999
 
 
     def start_thread_bpm(self):
@@ -209,10 +221,10 @@ class Input_Output:
         CLK = 26 #26 11
         DT = 9  #9 10
 
-        GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #GPIO.setwarnings(False)
+        #GPIO.setmode(GPIO.BCM)
+        #GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         prev_clk_state = GPIO.input(CLK)
         print("BPM debug after setup")
@@ -223,9 +235,9 @@ class Input_Output:
             if clk_state != prev_clk_state:  # detect change
                 print("BPM debug change detected")
                 if dt_state != clk_state:
-                    self._sequencer.bpm += 5  # Turn clockwise increases BPM
+                    self._sequencer.bpm -= 5  # Turn counterclockwise increases BPM
                 else:
-                    self._sequencer.bpm -= 5  # turn counterclockwise lower BPM
+                    self._sequencer.bpm += 5  # turn clockwise lower BPM
 
                 self._sequencer.bpm = max(30, min(self._sequencer.bpm, 300))  # Limiteer BPM tussen 30 en 300
                 print(f"BPM: {self._sequencer.bpm}")
