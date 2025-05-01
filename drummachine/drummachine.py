@@ -17,18 +17,29 @@ class DrumMachine:
 
     def __init__(self):
         # Initating mixer
-        pygame.mixer.pre_init(buffer=2**10) # Increase buffer to avoid underrun errors 2**10= 1024
-        pygame.init()
+        pygame.mixer.pre_init(frequency=32000, buffer=1024) # Increase buffer to avoid underrun errors 2**10= 1024 or frequency to 44100 for better quality 32000 or even 22050
+        pygame.mixer.init()
         # Loading sounds
-        kick = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")
-        snare = pygame.mixer.Sound("/home/pi/sounds/snare1.wav")
-        clap = pygame.mixer.Sound("/home/pi/sounds/clap1.wav")
-        ride = pygame.mixer.Sound("/home/pi/sounds/ride1.wav")
-        jazz = pygame.mixer.Sound("/home/pi/sounds/Jazz_Ride.wav")
-        hihat = pygame.mixer.Sound("/home/pi/sounds/hihat1.wav")
+        kick1 = pygame.mixer.Sound("/home/pi/sounds/kick1.wav")
+        kick2 = pygame.mixer.Sound("/home/pi/sounds/kick2.wav")
+        kick3 = pygame.mixer.Sound("/home/pi/sounds/kick3.wav")
+        kick4 = pygame.mixer.Sound("/home/pi/sounds/kick4.wav")
+
+        snare1 = pygame.mixer.Sound("/home/pi/sounds/snare1.wav")
+        snare2 = pygame.mixer.Sound("/home/pi/sounds/snare2.wav")
+        snare3 = pygame.mixer.Sound("/home/pi/sounds/snare3.wav")
+        snare4 = pygame.mixer.Sound("/home/pi/sounds/snare4.wav")
+
+        clap1 = pygame.mixer.Sound("/home/pi/sounds/clap1.wav")
+        jazz_ride = pygame.mixer.Sound("/home/pi/sounds/Jazz_Ride.wav")
+        ride1 = pygame.mixer.Sound("/home/pi/sounds/ride1.wav")
+        hihat1 = pygame.mixer.Sound("/home/pi/sounds/hihat1.wav")
+        loop = pygame.mixer.Sound("/home/pi/sounds/loop.wav")
+        gitaarstuk2 =  pygame.mixer.Sound("/home/pi/sounds/gitaarstuk2.wav")
+        shaker1 = pygame.mixer.Sound("/home/pi/sounds/shaker1.wav")
         # More sounds...
 
-        self._sounds = [kick, snare, clap, ride, jazz, hihat]
+        self._sounds = [kick1, snare1, clap1, ride1, jazz_ride, hihat1, kick2, snare2, loop, shaker1, kick3, snare3, kick4, snare4, gitaarstuk2]
 
         pygame.mixer.set_num_channels(len(self._sounds) * 3)
 
@@ -82,7 +93,7 @@ class DrumMachine:
         # print("Setup done")
 
         # Startup sound
-        jazz.play()
+        jazz_ride.play()
 
     def run_drummachine(self):
         try:
