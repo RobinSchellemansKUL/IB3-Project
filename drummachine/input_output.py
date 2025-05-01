@@ -206,8 +206,8 @@ class Input_Output:
 
     def polling_bpm(self):
         print("BPM debug")
-        CLK = 11
-        DT = 10
+        CLK = 26 #26 11
+        DT = 9  #9 10
 
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)

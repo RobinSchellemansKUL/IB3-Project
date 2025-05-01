@@ -48,13 +48,13 @@ class DrumMachine:
         GPIO.setup(17, GPIO.OUT)
         GPIO.setup(13, GPIO.OUT)
 
-        # Set CLK and DT for bpm
+        # Set CLK and DT for volume
         GPIO.setup(11, GPIO.IN)
         GPIO.setup(10, GPIO.IN)
 
-        # Set CLK and DT for volume
-        GPIO.setup(26, GPIO.OUT)
-        GPIO.setup(9, GPIO.OUT)
+        # Set CLK and DT for BPM
+        GPIO.setup(26, GPIO.IN)
+        GPIO.setup(9, GPIO.IN)
 
         print("GPIO pins activated")
 
