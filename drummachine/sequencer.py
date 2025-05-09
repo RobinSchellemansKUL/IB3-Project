@@ -51,6 +51,7 @@ class Sequencer:
             timestampcheck = time.time()
             if timestampcheck >= current_timestamp:
                 for j in range(0,3):
+                    # TODO: update leds
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
                             sound = self._layers_active[j][i]

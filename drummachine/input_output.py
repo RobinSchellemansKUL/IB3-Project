@@ -223,8 +223,8 @@ class Input_Output:
 
 
     def polling_bpm(self):
-        CLK = 11 #26 11
-        DT = 10  #9 10
+        CLK = 26 #26 11
+        DT = 9  #9 10
 
         prev_clk_state = GPIO.input(CLK)
 
@@ -245,8 +245,8 @@ class Input_Output:
             time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
 
     def polling_volume(self):
-        CLK = 26 #26 11
-        DT = 9  #9 10
+        CLK = 11 #26 11
+        DT = 10  #9 10
 
         prev_clk_state = GPIO.input(CLK)
 
