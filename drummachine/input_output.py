@@ -144,6 +144,7 @@ class Input_Output:
             else:
                 self._mode = "write"
                 print("Activated write mode")
+                self.led_write()
             time.sleep(waiting)
 
         elif GPIO.input(row_5) == GPIO.HIGH and row == 17:
@@ -162,25 +163,26 @@ class Input_Output:
             # no action
             time.sleep(waiting)
 
-        GPIO.output(row, GPIO.LOW)
+        if self._drummachine.playing == 0:
+            match self._mode:
+                case "write":
+                    GPIO.output(row, GPIO.LOW)
+                case _:
+                    GPIO.output(row, GPIO.LOW)
+                    self.led_clear()
+        else:
+            GPIO.output(row, GPIO.LOW)
 
     def button_action(self, switch):
         global sounds
         match self._mode:
             case "write":
-                match self._layer:
-                    case 1:
-                        self._sequencer.sequence_1[switch] = self._last_selected_sound
-                        print(f"wrote {self._last_selected_sound} in layer 1")
-                    case 2:
-                        self._sequencer.sequence_2[switch] = self._last_selected_sound
-                        print(f"wrote {self._last_selected_sound} in layer 2")
-                    case 3:
-                        self._sequencer.sequence_3[switch] = self._last_selected_sound
-                        print(f"wrote {self._last_selected_sound} in layer 3")
-                    case 4:
-                        self._sequencer.sequence_4[switch] = self._last_selected_sound
-                        print(f"wrote {self._last_selected_sound} in layer 4")
+                if self._sequencer.layers_active[self._layer-1][switch-1] == self._last_selected_sound:
+                    self._sequencer.layers_active[self._layer-1][switch-1] = 0
+                else:
+                    self._sequencer.layers_active[self._layer-1][switch-1] = self._last_selected_sound
+                    print(f"Wrote {self._last_selected_sound} in layer {self._layer}")
+                self.led_write()
             case "layer":
                 if 0 < switch <= 4:
                     self._layer = switch
@@ -201,10 +203,12 @@ class Input_Output:
                     else:
                         self._sequencer.layers_active[switch-1] = 0
                         print(f"layer{switch} deactivated")
+                    self.led_switch(switch)
             case _:
                 self._drummachine.sounds[switch-1].set_volume(self._sequencer.volume)
                 self._drummachine.sounds[switch-1].play()
-                self._last_selected_sound = self._drummachine.sounds[switch-1] # hier stond gwn switch ???  9999
+                self.led_switch(switch)
+                self._last_selected_sound = self._drummachine.sounds[switch-1]
 
 
     def start_thread_bpm(self):
@@ -265,6 +269,65 @@ class Input_Output:
 
             prev_clk_state = clk_state  # keep track of current clk state
             time.sleep(0.001)  #adjust delay to test out 0.01 (10ms) gives to much delay and wrong values
+
+    #helper function for binary code
+    def led_write(self):
+        print("DEBUG: led_write") #DEBUG
+        number = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        if self._sequencer.layers_active[self._layer-1] != 0:
+            print("DEBUG: if: led_write") #DEBUG
+            for i in range(0, 16):
+                print(f"DEBUG: {self._sequencer.layers_active[self._layer-1][i]} {self.last_selected_sound}")
+                if self._sequencer.layers_active[(self._layer-1)][i] == self.last_selected_sound:
+                    number[i] = 1
+            print(number) #DEBUG
+            self.led_driver(number)
+    def led_switch(self, switch):
+        number = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        number[switch-1] = 1
+        self.led_driver(number)
+    def led_driver(self, number):
+        print("DEBUG: led driver function called")
+        CLK_PIN = 14
+        LATCH_PIN = 27
+        BLANK_PIN = 22
+        SI_PIN = 24
+
+        GPIO.output(BLANK_PIN, GPIO.LOW)
+        GPIO.output(SI_PIN, GPIO.LOW)
+        GPIO.output(LATCH_PIN, GPIO.LOW)
+        GPIO.output(BLANK_PIN, GPIO.LOW)
+        for i in range(15,-1, -1):
+            if number[i] == 1:
+                GPIO.output(SI_PIN, GPIO.HIGH)
+            GPIO.output(CLK_PIN, GPIO.HIGH)
+            time.sleep(1/30000000)
+            GPIO.output(CLK_PIN, GPIO.LOW)
+            time.sleep(1/30000000)
+            GPIO.output(SI_PIN, GPIO.LOW)
+        GPIO.output(LATCH_PIN, GPIO.HIGH)
+        time.sleep(1/30000000)
+        GPIO.output(LATCH_PIN, GPIO.LOW)
+
+    def led_clear(self):
+        CLK_PIN = 14
+        LATCH_PIN = 27
+        BLANK_PIN = 22
+        SI_PIN = 24
+
+        GPIO.output(BLANK_PIN, GPIO.LOW)
+        GPIO.output(SI_PIN, GPIO.LOW)
+        GPIO.output(LATCH_PIN, GPIO.LOW)
+        GPIO.output(BLANK_PIN, GPIO.LOW)
+        for i in range(0, 16):
+            GPIO.output(CLK_PIN, GPIO.HIGH)
+            time.sleep(1/30000000)
+            GPIO.output(CLK_PIN, GPIO.LOW)
+            time.sleep(1/30000000)
+        GPIO.output(LATCH_PIN, GPIO.HIGH)
+        time.sleep(1/30000000)
+        GPIO.output(LATCH_PIN, GPIO.LOW)
+
 
     #Getters and Setters
     @property

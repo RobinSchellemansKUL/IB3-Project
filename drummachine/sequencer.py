@@ -5,6 +5,7 @@ import threading
 class Sequencer:
     _instance = None
     _drummachine = None
+    _input_output = None
 
     thread_sequencer = None
 
@@ -28,12 +29,12 @@ class Sequencer:
         self._bpm = 120
         self._volume = 1
 
-        self._sequence_default = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
-        self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        self._sequence_1 = [self._drummachine.sounds[0],0,0,0,self._drummachine.sounds[1],0,0,0,self._drummachine.sounds[0],0,self._drummachine.sounds[5],0,self._drummachine.sounds[1],0,0,0]
+        #self._sequence_1 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_3 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._sequence_4 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        self._layers_active = [self._sequence_default,0,0,0]
+        self._layers_active = [self._sequence_1,0,0,0]
 
     def start_thread_sequencer(self):
         print("degub")
@@ -50,8 +51,8 @@ class Sequencer:
             step_interval = 60 / self._bpm / 4 #read bpm again check for changes
             timestampcheck = time.time()
             if timestampcheck >= current_timestamp:
-                for j in range(0,3):
-                    # TODO: update leds
+                for j in range(0,4):
+                    #self._input_output.led_switch(i)
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
                             sound = self._layers_active[j][i]
@@ -79,6 +80,13 @@ class Sequencer:
     def drummachine(self, drummachine):
         self._drummachine = drummachine
 
+    @property
+    def input_output(self):
+        return self._input_output
+
+    @input_output.setter
+    def input_output(self, input_output):
+        self._input_output = input_output
     @property
     def sequence_1(self):
         return self._sequence_1

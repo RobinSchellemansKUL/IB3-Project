@@ -7,5 +7,6 @@ sequencer = Sequencer(drummachine)
 input_output = Input_Output(drummachine, sequencer)
 
 drummachine.input_output = input_output
+sequencer.input_output = input_output
 
 drummachine.run_drummachine()

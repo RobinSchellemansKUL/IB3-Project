@@ -79,8 +79,13 @@ class DrumMachine:
         GPIO.setup(26, GPIO.IN)
         GPIO.setup(9, GPIO.IN)
 
-        # TODO: fix led driver pins
-        # Set CLK and SIN for led driver
+        # Set pins for led driver
+        # Set CLK, SIN, LAT and blank for led driver
+        GPIO.setup(14, GPIO.OUT)
+        GPIO.setup(24, GPIO.OUT)
+        GPIO.setup(27, GPIO.OUT)
+        GPIO.setup(22, GPIO.OUT)
+
 
         print("GPIO pins activated")
 
