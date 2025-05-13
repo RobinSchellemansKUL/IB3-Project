@@ -37,7 +37,6 @@ class Sequencer:
         self._layers_active = [self._sequence_1,0,0,0]
 
     def start_thread_sequencer(self):
-        print("degub")
         if self.thread_sequencer is None or not self.thread_sequencer.is_alive():
             self.thread_sequencer = threading.Thread(target=self.play_sequencer, daemon=True)
             self.thread_sequencer.start()
@@ -51,8 +50,8 @@ class Sequencer:
             step_interval = 60 / self._bpm / 4 #read bpm again check for changes
             timestampcheck = time.time()
             if timestampcheck >= current_timestamp:
+                self._input_output.led_switch(i+1)
                 for j in range(0,4):
-                    #self._input_output.led_switch(i)
                     if self._layers_active[j] != 0:
                         if self._layers_active[j][i] != 0:
                             sound = self._layers_active[j][i]

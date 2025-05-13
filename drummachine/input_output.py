@@ -163,26 +163,27 @@ class Input_Output:
             # no action
             time.sleep(waiting)
 
-        if self._drummachine.playing == 0:
-            match self._mode:
-                case "write":
-                    GPIO.output(row, GPIO.LOW)
-                case _:
-                    GPIO.output(row, GPIO.LOW)
-                    self.led_clear()
-        else:
-            GPIO.output(row, GPIO.LOW)
+        # if self._drummachine.playing == 0:
+        match self._mode:
+            case "write":
+                GPIO.output(row, GPIO.LOW)
+            case _:
+                GPIO.output(row, GPIO.LOW)
+                self.led_clear()
+        # else:
+        #     GPIO.output(row, GPIO.LOW)
 
     def button_action(self, switch):
         global sounds
         match self._mode:
             case "write":
-                if self._sequencer.layers_active[self._layer-1][switch-1] == self._last_selected_sound:
-                    self._sequencer.layers_active[self._layer-1][switch-1] = 0
-                else:
-                    self._sequencer.layers_active[self._layer-1][switch-1] = self._last_selected_sound
-                    print(f"Wrote {self._last_selected_sound} in layer {self._layer}")
-                self.led_write()
+                if self._sequencer.layers_active[self._layer-1] != 0:
+                    if self._sequencer.layers_active[self._layer-1][switch-1] == self._last_selected_sound:
+                        self._sequencer.layers_active[self._layer-1][switch-1] = 0
+                    else:
+                        self._sequencer.layers_active[self._layer-1][switch-1] = self._last_selected_sound
+                        print(f"Wrote {self._last_selected_sound} in layer {self._layer}")
+                    self.led_write()
             case "layer":
                 if 0 < switch <= 4:
                     self._layer = switch
@@ -272,22 +273,18 @@ class Input_Output:
 
     #helper function for binary code
     def led_write(self):
-        print("DEBUG: led_write") #DEBUG
         number = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         if self._sequencer.layers_active[self._layer-1] != 0:
-            print("DEBUG: if: led_write") #DEBUG
             for i in range(0, 16):
-                print(f"DEBUG: {self._sequencer.layers_active[self._layer-1][i]} {self.last_selected_sound}")
                 if self._sequencer.layers_active[(self._layer-1)][i] == self.last_selected_sound:
                     number[i] = 1
-            print(number) #DEBUG
             self.led_driver(number)
     def led_switch(self, switch):
         number = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         number[switch-1] = 1
         self.led_driver(number)
+
     def led_driver(self, number):
-        print("DEBUG: led driver function called")
         CLK_PIN = 14
         LATCH_PIN = 27
         BLANK_PIN = 22
