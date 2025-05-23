@@ -6,8 +6,8 @@ CLK = 11
 DT = 10
 bpm = 120
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_OFF) #9999 pull_up_down=GPIO.PUD_UP
 
 ##manual test just reading the pins
 """

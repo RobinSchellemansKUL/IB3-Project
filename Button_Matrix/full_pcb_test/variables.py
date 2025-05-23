@@ -30,11 +30,3 @@ playing = 0
 # - layers_active --> active layers are 1
 layers = 1
 layer_active = [0, 0, 0, 0]
-
-
-# def main():
-#     # Setup
-#     global sounds
-#     sounds = setup.initiate()
-#
-# main()

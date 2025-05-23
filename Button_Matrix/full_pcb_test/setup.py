@@ -55,8 +55,6 @@ def initiate():
     # Start threads
     threads.thread_volume()
     threads.thread_bpm()
-    threads.thread_button_matrix()
-
     print("Threads activated")
 
     print("Setup done")
@@ -66,5 +64,17 @@ def main():
     sounds = initiate()
     input_output.write_sounds(sounds)
     sequencer.write_sounds(sounds)
+
+    try:
+        while True:
+            # Give a column number
+            input_output.readRow(5)
+            input_output.readRow(6)
+            input_output.readRow(17)
+            input_output.readRow(13)
+    except KeyboardInterrupt:
+        print("\n program closed")
+        GPIO.cleanup()
+
 
 main()

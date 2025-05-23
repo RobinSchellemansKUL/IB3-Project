@@ -1,7 +1,7 @@
 import time
 import pygame
 
-import main
+import variables
 
 sounds = []
 def write_sounds(loaded_sounds):

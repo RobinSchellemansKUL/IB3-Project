@@ -42,8 +42,19 @@ def polling_bpm():
 # Button Matrix #
 #################
 
+def polling_matrix(event):
+    print("DEBUG: started reading.")
+    readRow(5)
+    readRow(6)
+    readRow(17)
+    readRow(13)
+    # Schedule next execution
+    threading.Timer(0.2, polling_matrix).start()
+
+
+
+
 def readRow(row):
-    waiting = 0.2
     row_1 = 7
     row_2 = 8
     row_3 = 12
@@ -55,104 +66,96 @@ def readRow(row):
     if GPIO.input(row_1) == GPIO.HIGH and row == 5:
         print("Switch 1")
         button_action(1)
-        time.sleep(waiting)
 
-    elif GPIO.input(row_1) == GPIO.HIGH and row == 6:
+    if GPIO.input(row_1) == GPIO.HIGH and row == 6:
         print("Switch 2")
         button_action(2)
 
-    elif GPIO.input(row_1) == GPIO.HIGH and row == 17:
+    if GPIO.input(row_1) == GPIO.HIGH and row == 17:
         print("Switch 3")
         button_action(3)
 
-    elif GPIO.input(row_1) == GPIO.HIGH and row == 13:
+    if GPIO.input(row_1) == GPIO.HIGH and row == 13:
         print("Switch 4")
         button_action(4)
 
-    elif GPIO.input(row_2) == GPIO.HIGH and row == 5:
+    if GPIO.input(row_2) == GPIO.HIGH and row == 5:
         print("Switch 5")
         button_action(5)
 
-    elif GPIO.input(row_2) == GPIO.HIGH and row == 6:
+    if GPIO.input(row_2) == GPIO.HIGH and row == 6:
         print("Switch 6")
         button_action(6)
 
-    elif GPIO.input(row_2) == GPIO.HIGH and row == 17:
+    if GPIO.input(row_2) == GPIO.HIGH and row == 17:
         print("Switch 7")
         button_action(7)
 
-    elif GPIO.input(row_2) == GPIO.HIGH and row == 13:
+    if GPIO.input(row_2) == GPIO.HIGH and row == 13:
         print("Switch 8")
         button_action(8)
 
-    elif GPIO.input(row_3) == GPIO.HIGH and row == 5:
+    if GPIO.input(row_3) == GPIO.HIGH and row == 5:
         print("Switch 9")
         button_action(9)
 
-    elif GPIO.input(row_3) == GPIO.HIGH and row == 6:
+    if GPIO.input(row_3) == GPIO.HIGH and row == 6:
         print("Switch 10")
         button_action(10)
 
-    elif GPIO.input(row_3) == GPIO.HIGH and row == 17:
+    if GPIO.input(row_3) == GPIO.HIGH and row == 17:
         print("Switch 11")
         button_action(11)
 
-    elif GPIO.input(row_3) == GPIO.HIGH and row == 13:
+    if GPIO.input(row_3) == GPIO.HIGH and row == 13:
         print("Switch 12")
         button_action(12)
 
-    elif GPIO.input(row_4) == GPIO.HIGH and row == 5:
+    if GPIO.input(row_4) == GPIO.HIGH and row == 5:
         print("Switch 13")
         button_action(13)
-        time.sleep(waiting)
 
-    elif GPIO.input(row_4) == GPIO.HIGH and row == 6:
+    if GPIO.input(row_4) == GPIO.HIGH and row == 6:
         print("Switch 14")
         button_action(14)
-        time.sleep(waiting)
 
-    elif GPIO.input(row_4) == GPIO.HIGH and row == 17:
+    if GPIO.input(row_4) == GPIO.HIGH and row == 17:
         print("Switch 15")
         button_action(15)
-        time.sleep(waiting)
 
-    elif GPIO.input(row_4) == GPIO.HIGH and row == 13:
+    if GPIO.input(row_4) == GPIO.HIGH and row == 13:
         print("Switch 16")
         button_action(16)
-        time.sleep(waiting)
 
-    elif GPIO.input(row_5) == GPIO.HIGH and row == 5:
+    if GPIO.input(row_5) == GPIO.HIGH and row == 5:
         print("Switch 17")
         if main.playing == 0:
             main.playing = 1
         else:
             main.playing = 0
-        time.sleep(waiting)
 
-    elif GPIO.input(row_5) == GPIO.HIGH and row == 6:
+    if GPIO.input(row_5) == GPIO.HIGH and row == 6:
         print("Switch 18")
         # write
         if main.modes == "write":
             main.modes = "default"
         else:
             main.modes = "write"
-        time.sleep(waiting)
 
-    elif GPIO.input(row_5) == GPIO.HIGH and row == 17:
+    if GPIO.input(row_5) == GPIO.HIGH and row == 17:
         print("Switch 19")
         # layer
         if main.modes == "layer":
             main.modes = "default"
         else:
             main.modes = "layer"
-        time.sleep(waiting)
 
-    elif GPIO.input(row_5) == GPIO.HIGH and row == 13:
+    if GPIO.input(row_5) == GPIO.HIGH and row == 13:
         print("Switch 20")
         # no action
-        time.sleep(waiting)
 
     GPIO.output(row, GPIO.LOW)
+    #time.sleep(0.2)
 
 def button_action(switch):
     global sounds
